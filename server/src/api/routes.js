@@ -1,7 +1,9 @@
 const router = require('express').Router();
 
-const user = require('./components/userController');
+const user = require('./components/users/usersController');
+const validator = require('./middleware/validator');
+const schema = require('./components/users/usersSchema');
 
-router.post('/user', user.insert);
+router.post('/user', validator(schema.register), user.addUser);
 
 module.exports = router;
