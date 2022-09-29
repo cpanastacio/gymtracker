@@ -11,7 +11,7 @@ const config = {
 
 const pool = new Pool(config)
 
-dUser /**
+/**
  * Responsible for querying the database
  * @param {String} queryText - Sql statement
  * @param {String} queryValues - Values to be used on the sql statement
@@ -19,8 +19,10 @@ dUser /**
  */
 async function query(queryText, queryValues) {
     const client = await pool.connect();
+    const schema = "SET search_path TO 'lifts_schema';";
     try {
         const sql = concatQueryWithValues(queryText, queryValues)
+        await client.query(schema);
         return await client.query(sql);
     } catch (e) {
         throw Error(e.message)
