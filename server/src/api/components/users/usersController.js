@@ -1,23 +1,20 @@
 const userDAL = require('./usersDAL');
 
+
+/**
+ * Responsible for creating a new user on the system
+ * @param {Object} req - Request object
+ * @param {Object} req.body - Body of the request
+ * @param {Object} res - Response Object
+ * @returns 
+ */
 async function addUser(req, res) {
-    const { username, firstName, lastName, birthday, gender, password, height, weight, email } = req.body;
-    const user = {
-        username,
-        password,
-        firstName,
-        lastName,
-        birthday,
-        gender,
-        height,
-        weight,
-        email
-    };
-    const teste = await userDAL.insert(user)
-    console.log(teste);
-
-    return res.json(user);
-
+    try {
+        const result = await userDAL.insert(req.body)
+        return res.json(result);
+    } catch (e) {
+        return res.status(400).json({ error: e.message })
+    }
 }
 
 module.exports = {

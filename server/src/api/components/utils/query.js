@@ -11,13 +11,51 @@ const config = {
 
 const pool = new Pool(config)
 
-module.exports = async function (queryText, queryValues) {
+dUser /**
+ * Responsible for querying the database
+ * @param {String} queryText - Sql statement
+ * @param {String} queryValues - Values to be used on the sql statement
+ * @returns 
+ */
+async function query(queryText, queryValues) {
     const client = await pool.connect();
     try {
-        return await client.query(queryText, queryValues);
+        const sql = concatQueryWithValues(queryText, queryValues)
+        return await client.query(sql);
     } catch (e) {
-        return { error: e.stack }
+        throw Error(e.message)
     } finally {
         client.release()
     }
+}
+
+/**
+ * Responsible for formatting the sql statement
+ * @param {String} queryText - Sql statement
+ * @param {String} queryValues - Values to be used on the sql statement
+ * @returns 
+ */
+function concatQueryWithValues(queryText, queryValues) {
+    let text = queryText;
+    for (let i = 0; i < queryValues.length; i++) {
+        const value = queryValues[i];
+        text = text.replace(`$${i + 1}`, `'${value}'`);
+    }
+    return text;
+}
+
+function getSQLPlaceholders(amount) {
+    let s = '';
+    for (let a = 1; a <= amount; a++) {
+        s += '$' + a + ', ';
+    }
+    if (s) {
+        s = s.substring(0, s.length - 2);
+    }
+    return s;
+};
+
+module.exports = {
+    getSQLPlaceholders,
+    query
 }
