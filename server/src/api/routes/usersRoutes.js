@@ -2,12 +2,12 @@ const router = require('express').Router();
 const session = require('express-session');
 const { randomUUID } = require('crypto');
 
-const user = require('./components/users/usersController');
-const userDAL = require('./components/users/usersDAL');
+const user = require('../components/users/usersController');
+const userDAL = require('../components/users/usersDAL');
 
-const validator = require('./middleware/validator');
-const authenticator = require('./middleware/authenticator');
-const schema = require('./components/users/usersSchema');
+const validator = require('../middleware/validator');
+const authenticator = require('../middleware/authenticator');
+const schema = require('../components/users/usersSchema');
 
 
 const fiveDays = (1000 * 60 * 60 * 24) * 5;
@@ -61,6 +61,6 @@ router.get('/logout', authenticator, async (req, res) => {
     });
 })
 
-router.post('/user', validator(schema.register), user.insert);
+router.post('/', validator(schema.register), user.insert);
 
 module.exports = router;
