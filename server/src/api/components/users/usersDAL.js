@@ -49,19 +49,21 @@ async function login(username, password) {
   return userFound.rows[0];
 }
 
-
-async function getUser(username, password) {
-
-  const queryText = `SELECT * from lifts_schema.users where password = $1 and username = $2`;
-  const queryValues = [passwordDecrypt, username];
+/**
+ * Responsible for deleting a user by its user_id
+ * @param {number} userId - Id of the user to be deleted
+ * @returns 
+ */
+async function deleteById(userId) {
+  const queryText = `Delete from users where user_id = $1`;
+  const queryValues = [userId];
   const result = await db.query(queryText, queryValues);
-
-
+  return result.rowCount;
 }
 
 module.exports = {
   insert,
   getUserById,
   login,
-  getUser
+  deleteById
 };

@@ -63,4 +63,6 @@ router.get('/logout', authenticator, async (req, res) => {
 
 router.post('/', validator(schema.register), user.insert);
 
+router.delete('/:id', authenticator, user.deleteById);
+
 module.exports = router;
